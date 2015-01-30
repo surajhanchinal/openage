@@ -45,6 +45,7 @@ _the openage authors_ are:
 | Lautaro Nahuel De León      | lndl                        | laudleon@gmail.com               |
 | Robin Kreis                 | rkreis                      | r.kreis@uni-bremen.de            |
 | Shion Ryuu                  | shion                       | shionryuu@outlook.com            |
+| Paul Tolstoi                | ptolstoi, antodias          | paul.tolstoi@gmail.com           |
 
 If you're a first-time commiter, add yourself to the above list. This is not
 just for legal reasons, but also to keep an overview of all those nicknames.
