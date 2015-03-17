@@ -28,6 +28,8 @@ def tests_py():
     yield "openage.cppinterface.exctranslate_tests.cpp_to_py"
     yield ("openage.cppinterface.exctranslate_tests.cpp_to_py_bounce",
            "translates the exception back and forth a few times")
+    yield ("openage.pack.tests.packcfg_read", "read a test datapack")
+    yield ("openage.pack.tests.packcfg_write", "write a test datapack")
     yield ("openage.testing.misc_cpp.enum",
            "tests the interface for C++'s util::Enum class")
     yield "openage.util.threading.test_concurrent_chain"

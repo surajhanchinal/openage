@@ -198,6 +198,8 @@ def conversion_required(asset_dir, args):
         info("Converted assets have improper format; expected integer version")
         return True
 
+    format_hash = empiresdat.EmpiresDat.format_hash().hexdigest()
+    # TODO use format_hash
     changes = changelog.changes(asset_version)
 
     if not changes:
