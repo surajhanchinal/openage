@@ -508,21 +508,23 @@ int64_t Engine::lastframe_duration_nsec() {
 	return this->fps_counter.nsec_lastframe;
 }
 
-void Engine::render_text(coord::window position, size_t size, const char *format, ...) {
+Font &Engine::get_font(size_t size) {
 	auto it = this->fonts.find(size);
 	if (it == this->fonts.end()) {
 		throw Error(MSG(err) << "Unknown font size requested: " << size);
 	}
 
-	Font *font = it->second.get();
+	return *(it->second);
+}
 
+void Engine::render_text(coord::window position, size_t size, const char *format, ...) {
 	std::string buf;
 	va_list vl;
 	va_start(vl, format);
 	util::vsformat(format, vl, buf);
 	va_end(vl);
 
-	this->text_renderer->set_font(font);
+	this->text_renderer->set_font(&this->get_font(size));
 	this->text_renderer->draw(position.x, position.y, buf);
 }
 

@@ -228,6 +228,11 @@ public:
 	int64_t lastframe_duration_nsec();
 
 	/**
+	 * find a Font instance
+	 */
+	Font &get_font(size_t size);
+
+	/**
 	 * render text with the at a position with specified font size
 	 */
 	void render_text(coord::window position, size_t size, const char *format, ...) __attribute__((format (printf, 4, 5)));
