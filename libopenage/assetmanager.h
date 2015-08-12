@@ -2,14 +2,12 @@
 
 #pragma once
 
-#include "config.h"
-
 #include <unordered_map>
 #include <string>
 #include <memory>
 
 #include "util/path.h"
-
+#include "watch/watch.h"
 
 namespace qtsdl {
 class GuiItemLink;
@@ -67,6 +65,11 @@ public:
 	void check_updates();
 
 protected:
+	/**
+	 * File change monitoring and automatic reloading.
+	 */
+	std::unique_ptr<watch::WatchManager> watch_manager;
+
 	/**
 	 * Create an internal texture handle.
 	 */
