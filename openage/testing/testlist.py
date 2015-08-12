@@ -75,6 +75,7 @@ def tests_cpp():
     yield "openage::util::tests::siphash"
     yield "openage::util::tests::array_conversion"
     yield "openage::input::tests::parse_event_string", "keybinds parsing"
+    yield "openage::watch::tests::run"
 
 
 def demos_cpp():

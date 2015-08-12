@@ -49,6 +49,7 @@ add_subdirectory("terrain")
 add_subdirectory("testing")
 add_subdirectory("unit")
 add_subdirectory("util")
+add_subdirectory("watch")
 
 
 # run codegen, add files to executable
