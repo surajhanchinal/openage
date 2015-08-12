@@ -32,6 +32,7 @@
 #include "unit/selection.h"
 #include "screenshot.h"
 
+
 namespace openage {
 
 namespace gui {
@@ -39,24 +40,29 @@ class GUI;
 }
 
 namespace renderer {
-
 class Font;
 class FontManager;
 class TextRenderer;
-
+class Renderer;
+class Window;
 } // openage::renderer
+
+namespace job {
+class JobManager;
+} // openage::job
 
 class DrawHandler;
 class TickHandler;
 class ResizeHandler;
 
-class Generator;
-class GameSpec;
+class Font;
 class GameMain;
 
-namespace gui {
-class GuiItemLink;
-} // openage::gui
+class GameSpec;
+class Generator;
+class Player;
+class ScreenshotManager;
+
 
 
 /**
@@ -236,7 +242,7 @@ public:
 	/**
 	* return this engine's screenshot manager.
 	*/
-	ScreenshotManager &get_screenshot_manager();
+	ScreenshotManager *get_screenshot_manager();
 
 	/**
 	 * return this engine's action manager.
@@ -439,9 +445,9 @@ private:
 	std::unique_ptr<gui::GUI> gui;
 
 	/*
-	 * the engines profiler
+	 * The renderer. Accepts all tasks to be drawn on screen.
 	 */
-	util::Profiler profiler;
+	std::unique_ptr<renderer::Renderer> renderer;
 
 	/**
 	 * ttf font loading manager
@@ -475,6 +481,11 @@ public:
 	 * Link to the Qt GUI.
 	 */
 	gui::GuiItemLink *gui_link;
+
+	/**
+	 * the engines profiler
+	 */
+	util::Profiler profiler;
 };
 
 } // namespace openage
