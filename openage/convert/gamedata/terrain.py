@@ -26,10 +26,10 @@ class TerrainPassGraphic(Exportable):
 
     data_format = (
         # when this restriction in unit a was selected, can the unit be placed on this terrain id? 0=no, -1=yes
-        (READ, "buildable", "int32_t"),
-        (READ, "graphic_id0", "int32_t"),
-        (READ, "graphic_id1", "int32_t"),
-        (READ, "replication_amount", "int32_t"),
+        (READ, "slp_id_exit_tile", "int32_t"),
+        (READ, "slp_id_enter_tile", "int32_t"),
+        (READ, "slp_id_walk_tile", "int32_t"),
+        (READ, "walk_sprite_rate", "float"),
     )
 
     def __init__(self, **args):
@@ -48,7 +48,12 @@ class TerrainRestriction(Exportable):
     data_format = (
         # index of each array == terrain id
         # when this restriction was selected, can the terrain be accessed?
-        (READ, "accessible_dmgmultiplier", "float[terrain_count]"),  # unit interaction_type activates this as damage multiplier
+        # unit interaction_type activates this as damage multiplier
+        # See unit armor terrain restriction;
+        # pass-ability: [no: == 0, yes: > 0]
+        # build-ability: [<= 0.05 can't build here, > 0.05 can build]
+        # damage: [0: damage multiplier is 1, > 0: multiplier = value]
+        (READ, "accessible_dmgmultiplier", "float[terrain_count]"),
         (READ, "pass_graphics", SubdataMember(
             ref_type=TerrainPassGraphic,
             length="terrain_count",

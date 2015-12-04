@@ -60,6 +60,8 @@ class UnitCommand(Exportable):
                 135: "KIDNAP_UNIT",
                 136: "DEPOSIT_UNIT",
                 149: "SHEAR",
+                150: "REGENERATION",
+                151: "FEITORIA",
                 768: "UNKNOWN_768",
                 1024: "UNKNOWN_1024",
             },
@@ -786,7 +788,10 @@ class UnitBird(UnitDeadOrFish):
 
     data_format = (
         (READ_EXPORT, None, IncludeMembers(cls=UnitDeadOrFish)),
-        (READ, "sheep_conversion", "int16_t"),     # 0=can be converted by unit command 107 (you found sheep!!1)
+        # callback unit action id when found.
+        # monument and sheep: 107 = enemy convert.
+        # all auto-convertible units: 0, most other units: -1
+        (READ, "sheep_conversion", "int16_t"),
         (READ, "search_radius", "float"),
         (READ_EXPORT, "work_rate", "float"),
         (READ_EXPORT, "drop_site0", "int16_t"),           # unit id where gathered resources shall be delivered to

@@ -1,4 +1,4 @@
-# Copyright 2013-2015 the openage authors. See copying.md for legal info.
+# Copyright 2013-2016 the openage authors. See copying.md for legal info.
 
 # TODO pylint: disable=C,R
 
@@ -27,9 +27,18 @@ class Effect(Exportable):
                 5: "ATTRIBUTE_MUL",       # if a != -1: unit_id, else b == unit_class_id; c=attribute_id, d=factor
                 6: "RESOURCE_MUL",        # a == resource_id, d == factor
 
+                # may mean something different in aok:hd:
+                10: "TEAM_ATTRIBUTE_ABSSET",
+                11: "TEAM_RESOURCE_MODIFY",
+                12: "TEAM_UNIT_ENABLED",
+                13: "TEAM_UNIT_UPGRADE",
+                14: "TEAM_ATTRIBUTE_RELSET",
+                15: "TEAM_ATTRIBUTE_MUL",
+                16: "TEAM_RESOURCE_MUL",
+
                 # these are only used in technology trees, 103 even requires one
                 101: "TECHCOST_MODIFY",   # a == research_id, b == resource_id, if c == 0: d==absval else: d == relval
-                102: "TECH_DISABLE",      # d == research_id
+                102: "TECH_TOGGLE",       # d == research_id
                 103: "TECH_TIME_MODIFY",  # a == research_id, if c == 0: d==absval else d==relval
 
                 # attribute_id:
@@ -67,6 +76,7 @@ class Effect(Exportable):
                 # 106: gold cost
                 # 107: max duplicated missiles
                 # 108: healing rate
+                # 108: regeneration rate
             },
         )),
         (READ, "unit",      "int16_t"),       # == a
@@ -102,7 +112,13 @@ class AgeTechTree(Exportable):
     data_format = (
         (READ_UNKNOWN, None, "int32_t"),
         (READ, "id", "int32_t"),
-        (READ_UNKNOWN, None, "int8_t"),
+        # 0=generic
+        # 1=TODO
+        # 2=default
+        # 3=marks as not available
+        # 4=upgrading, constructing, creating
+        # 5=research completed, building built
+        (READ, "status", "int8_t"),
         (READ, "building_count", "int8_t"),
         (READ, "buildings", "int32_t[building_count]"),
         (READ, "unit_count", "int8_t"),
@@ -122,7 +138,13 @@ class BuildingConnection(Exportable):
 
     data_format = (
         (READ_EXPORT, "id", "int32_t"),                   # unit id of the current building
-        (READ, "prerequisite_count", "int8_t"),           # always 2, as we got 2 of them hardcoded below (unit_or_research, mode)
+        # 0=generic
+        # 1=TODO
+        # 2=default
+        # 3=marks as not available
+        # 4=upgrading, constructing, creating
+        # 5=research completed, building built
+        (READ, "status", "int8_t"),                       # maybe always 2 because we got 2 of them hardcoded below (unit_or_research, mode)
         (READ_EXPORT, "building_count", "int8_t"),
         (READ, "buildings", "int32_t[building_count]"),   # new buildings available when this building was created
         (READ_EXPORT, "unit_count", "int8_t"),
@@ -158,7 +180,13 @@ class UnitConnection(Exportable):
 
     data_format = (
         (READ, "id", "int32_t"),
-        (READ_UNKNOWN, None, "int8_t"),
+        # 0=generic
+        # 1=TODO
+        # 2=default
+        # 3=marks as not available
+        # 4=upgrading, constructing, creating
+        # 5=research completed, building built
+        (READ, "status", "int8_t"),                 # always 2: default
         (READ, "upper_building", "int32_t"),        # building, where this unit is created
         (READ, "required_researches", "int32_t"),
         (READ, "age", "int32_t"),
@@ -185,7 +213,13 @@ class ResearchConnection(Exportable):
 
     data_format = (
         (READ, "id", "int32_t"),
-        (READ_UNKNOWN, None, "int8_t"),
+        # 0=generic
+        # 1=TODO
+        # 2=default
+        # 3=marks as not available
+        # 4=upgrading, constructing, creating
+        # 5=research completed, building built
+        (READ, "status", "int8_t"),
         (READ, "upper_building", "int32_t"),
         (READ, "building_count", "int8_t"),
         (READ, "buildings", "int32_t[building_count]"),
