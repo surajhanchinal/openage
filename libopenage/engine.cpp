@@ -112,10 +112,10 @@ Engine::Engine(util::Dir *data_dir, int32_t fps_limit, bool gl_debug, const char
 
 	// create the graphical display
 	this->window = std::make_unique<renderer::Window>(windowtitle);
-	this->renderer = std::make_unique<renderer::Renderer>(this->window->get_context());
+	//this->renderer = std::make_unique<renderer::Renderer>(this->window->get_context());
 
 	// renderer has to be notified of window size changes
-	this->register_resize_action(this->renderer.get());
+	//this->register_resize_action(this->renderer.get());
 
 	// qml sources will be installed to the asset dir
 	// otherwise assume that launched from the source dir
@@ -356,7 +356,7 @@ void Engine::loop() {
 		}
 		glPopMatrix();
 
-		this->renderer->check_error();
+		//	this->renderer->check_error();
 
 		glPushMatrix(); {
 			// the hud coordinate system is automatically established
@@ -380,7 +380,7 @@ void Engine::loop() {
 		}
 		glPopMatrix();
 
-		this->renderer->check_error();
+		//this->renderer->check_error();
 
 		this->profiler.end_measure("rendering");
 
