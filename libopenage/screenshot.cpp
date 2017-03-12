@@ -45,7 +45,7 @@ std::string ScreenshotManager::gen_next_filename() {
 void ScreenshotManager::save_screenshot() {
 	std::string filename = this->gen_next_filename();
 
-	this->renderer->screenshot(filename);
+	//this->renderer->screenshot(filename);
 }
 
 
