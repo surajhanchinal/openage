@@ -9,7 +9,7 @@
 namespace openage {
 namespace log {
 
-struct message;
+class message;
 
 /**
  * Convenience method that makes use of the 'general' LogSource.
