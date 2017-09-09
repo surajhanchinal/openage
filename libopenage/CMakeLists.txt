@@ -27,7 +27,6 @@ pxdgen(
 	engine.h
 )
 
-
 # add subsystem folders
 add_subdirectory("audio")
 add_subdirectory("console")
@@ -83,6 +82,10 @@ endif()
 find_package(Freetype REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(SDL2Image REQUIRED)
+# Hack to use custom SDL2
+set(SDL2_LIBRARY /home/wojtek/Programming/C++/SDL/out/lib/libSDL2.so)
+set(SDL2_INCLUDE_DIR /home/wojtek/Programming/C++/SDL/out/include/)
+set(SDL2IMAGE_INCLUDE_DIRS /home/wojtek/Programming/C++/SDL/out/include/)
 find_package(Opusfile REQUIRED)
 find_package(Epoxy REQUIRED)
 find_package(HarfBuzz 1.0.0 REQUIRED)
@@ -154,7 +157,7 @@ endif()
 
 if(WANT_VULKAN AND VULKAN_FOUND)
 	have_config_option(vulkan VULKAN true)
-	include_directories(${VULKAN_INCLUDE_DIR})
+	include_directories(${Vulkan_INCLUDE_DIRS})
 else()
 	have_config_option(vulkan VULKAN false)
 endif()
@@ -194,11 +197,13 @@ target_link_libraries(libopenage
 		${EPOXY_LIBRARIES}
 		${MATH_LIB}
 		${OPENGL_LIBRARY}
+    ${Vulkan_LIBRARIES}
 		${OPUS_LIBRARIES}
 		${SDL2IMAGE_LIBRARIES}
 		${SDL2_LIBRARY}
 		${UTIL_LIB}
 		${HarfBuzz_LIBRARIES}
+        pthread
 	# TODO: change to PUBLIC (or, alternatively, remove all keywords
 	# of this type) when qt cmake scripts change declarations of the
 	# IMPORTED libraries to GLOBAL.
