@@ -11,15 +11,17 @@ namespace vulkan {
 
 /// A Vulkan representation of a display target that can be drawn onto directly,
 /// that is _not_ by copying data from another object.
-class VlkDrawableDisplay final : public RenderTarget {
+class VlkDrawableDisplay {
+public:
 	// use shared_ptr?
 	VkDevice device;
 	VkSwapchainKHR swapchain;
 	VkFormat format;
 	VkExtent2D extent;
 	std::vector<VkImage> images;
+	std::vector<VkImageView> image_views;
+	std::vector<VkFramebuffer> framebuffers;
 
-public:
 	VkSurfaceFormatKHR choose_best_surface_format(std::vector<VkSurfaceFormatKHR> const& formats) {
 		// If the implementation doesn't have preferred formats, choose our own
 		if (formats.size() == 1
@@ -113,16 +115,47 @@ public:
 		cr_swap.clipped = VK_TRUE;
 		cr_swap.oldSwapchain = VK_NULL_HANDLE;
 
-		VkResult res = vkCreateSwapchainKHR(this->device, &cr_swap, nullptr, &this->swapchain);
-		if (res != VK_SUCCESS) {
-			throw Error(MSG(err) << "Failed to create a Vulkan swapchain.");
-		}
+		VK_CALL_CHECKED(vkCreateSwapchainKHR, this->device, &cr_swap, nullptr, &this->swapchain);
 
 		this->images = vk_do_ritual(vkGetSwapchainImagesKHR, this->device, this->swapchain);
+
+		// TODO move out?
+		for (auto img : this->images) {
+			VkImageViewCreateInfo cr_view = {};
+			cr_view.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+			cr_view.image = img;
+			cr_view.viewType = VK_IMAGE_VIEW_TYPE_2D;
+			cr_view.format = this->format;
+			cr_view.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+			cr_view.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+			cr_view.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+			cr_view.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+			cr_view.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			cr_view.subresourceRange.baseMipLevel = 0;
+			cr_view.subresourceRange.levelCount = 1;
+			cr_view.subresourceRange.baseArrayLayer = 0;
+			cr_view.subresourceRange.layerCount = 1;
+
+			VkImageView view;
+			VK_CALL_CHECKED(vkCreateImageView, this->device, &cr_view, nullptr, &view);
+
+			this->image_views.push_back(view);
+		}
 	}
 
 	~VlkDrawableDisplay() {
 		vkDestroySwapchainKHR(this->device, this->swapchain, nullptr);
+	}
+};
+
+class VlkFramebuffer final : public RenderTarget {
+	std::vector<VkImageView> attachments;
+	VkFramebuffer framebuffer;
+	VkViewport viewport;
+
+public:
+	VlkFramebuffer(VkRenderPass pass, std::vector<VkImageView> const& attachments) {
+
 	}
 };
 

@@ -1,5 +1,9 @@
 #pragma once
 
+#include <vulkan/vulkan.h>
+
+#include "../../error/error.h"
+
 
 template <typename R, typename R2>
 std::vector<R> vk_do_ritual(R2 (*func)(uint32_t*, R*)) {
@@ -40,3 +44,13 @@ std::vector<R> vk_do_ritual(R2 (*func)(T, U, V, uint32_t*, R*), T2&& a, U2&& b, 
 
 	return ret;
 }
+
+#define VK_CALL_CHECKED(fun, ...)                                       \
+	{ \
+		VkResult res = fun(__VA_ARGS__); \
+		if (res != VK_SUCCESS) { \
+		} \
+	}
+
+//throw Error(MSG(err) << "Call to Vulkan function " << #fun << " failed with " << vk::to_string(vk::Result(res)) << "."); \
+//

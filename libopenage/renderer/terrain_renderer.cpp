@@ -65,7 +65,6 @@ void TerrainRenderer::add_tiles(const std::vector<Tile>& tiles) {
 
 		this->render_pass.renderables.push_back(internal_tile.renderable);
 	}
-
 }
 
 Eigen::Matrix3f TerrainRenderer::calculate_texcoord_transform(const Tile& tile) {

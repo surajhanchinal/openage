@@ -32,7 +32,8 @@ void renderer_demo_0() {
 	auto renderer = std::make_unique<opengl::GlRenderer>(window.get_context());
 
 	auto vshader_src = resources::ShaderSource(
-		resources::shader_source_t::glsl_vertex,
+		resources::shader_lang_t::glsl,
+		resources::shader_stage_t::vertex,
 		R"s(
 #version 330
 
@@ -53,7 +54,8 @@ gl_Position = mvp * vec4(position, 0.0, 1.0);
 )s");
 
 	auto fshader_src = resources::ShaderSource(
-		resources::shader_source_t::glsl_fragment,
+		resources::shader_lang_t::glsl,
+		resources::shader_stage_t::fragment,
 		R"s(
 #version 330
 
@@ -73,7 +75,8 @@ void main() {
 )s");
 
 	auto vshader_display_src = resources::ShaderSource(
-		resources::shader_source_t::glsl_vertex,
+		resources::shader_lang_t::glsl,
+		resources::shader_stage_t::vertex,
 		R"s(
 #version 330
 
@@ -98,7 +101,8 @@ v_uv = uv;
 
 
 	auto fshader_display_src = resources::ShaderSource(
-		resources::shader_source_t::glsl_fragment,
+		resources::shader_lang_t::glsl,
+		resources::shader_stage_t::fragment,
 		R"s(
 #version 330
 
@@ -242,7 +246,7 @@ void main() {
 
 	while (!window.should_close()) {
 		renderer->render(pass);
-		renderer->render(display_pass);
+		//renderer->render(display_pass);
 		window.update();
 		window.get_context()->check_error();
 	}

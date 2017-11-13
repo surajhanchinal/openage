@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vulkan/vulkan.hpp>
+#include <vulkan/vulkan.h>
 
 
 namespace openage {
@@ -9,19 +9,26 @@ namespace vulkan {
 
 /// A class for dynamically loading Vulkan extension functions.
 class VlkLoader {
-	PFN_vkCreateDebugReportCallbackEXT CreateDebugReportCallbackEXT;
-	PFN_vkDestroyDebugReportCallbackEXT DestroyDebugReportCallbackEXT;
+#ifndef NDEBUG
+	PFN_vkCreateDebugReportCallbackEXT pCreateDebugReportCallbackEXT;
+	PFN_vkDestroyDebugReportCallbackEXT pDestroyDebugReportCallbackEXT;
+#endif
+
+	bool inited;
 
 public:
-	/// Initialize this loader for the given Vulkan instance.
-	VlkLoader(VkInstance instance);
+	VlkLoader();
 
+	/// Initialize this loader for the given Vulkan instance.
+	void init(VkInstance);
+
+#ifndef NDEBUG
 	/// Part of VK_EXT_debug_report, allows setting a callback for debug events.
-	vk::Result createDebugReportCallbackEXTUnique(
-		vk::Instance instance,
-		const vk::DebugReportCallbackCreateInfoEXT pCreateInfo,
-		const vk::AllocationCallbacks* pAllocator,
-		vk::DebugReportCallbackEXT* pCallback
+	VkResult vkCreateDebugReportCallbackEXT(
+		VkInstance instance,
+		const VkDebugReportCallbackCreateInfoEXT* pCreateInfo,
+		const VkAllocationCallbacks* pAllocator,
+		VkDebugReportCallbackEXT* pCallback
 	);
 
 
@@ -31,6 +38,7 @@ public:
 		VkDebugReportCallbackEXT callback,
 		const VkAllocationCallbacks* pAllocator
 	);
+#endif
 };
 
 }}} // openage::renderer::vulkan

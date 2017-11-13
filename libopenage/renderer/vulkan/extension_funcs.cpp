@@ -1,7 +1,8 @@
 #include <set>
 #include <string>
+#include <vector>
 
-#include <vulkan/vulkan.hpp>
+#include <vulkan/vulkan.h>
 
 
 /// This whole file is a _HORRIBLE HACK_ to get extensions functions to work easily.
@@ -71,7 +72,7 @@ static void make_ext_available() {
 		VkInstance instance;
 		VkResult res = vkCreateInstance(&inst_info, nullptr, &instance);
 		if (res != VK_SUCCESS) {
-			throw "Failed to HACKHACKHACK.";
+			throw std::string("Failed to HACKHACKHACK.");
 		}
 
 		pCreateDebugReportCallbackEXT = PFN_vkCreateDebugReportCallbackEXT(vkGetInstanceProcAddr(instance, "vkCreateDebugReportCallbackEXT"));

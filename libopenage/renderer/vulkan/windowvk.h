@@ -8,6 +8,8 @@
 
 #include "../window.h"
 
+#include "loader.h"
+
 
 namespace openage {
 namespace renderer {
@@ -31,6 +33,7 @@ class VlkWindow : public openage::renderer::Window {
 #ifndef NDEBUG
 	VkDebugReportCallbackEXT debug_callback;
 #endif
+	VlkLoader loader;
 
 public:
 	VlkWindow(const char* title);

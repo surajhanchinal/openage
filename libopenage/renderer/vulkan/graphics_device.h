@@ -1,8 +1,9 @@
 #pragma once
 
 #include <experimental/optional>
+#include <vector>
 
-#include <vulkan/vulkan.hpp>
+#include <vulkan/vulkan.h>
 
 
 namespace openage {
@@ -50,10 +51,6 @@ public:
 	/// Given a physical device and a surface, checks whether the device is capable of presenting to the surface.
 	/// If it is, returns information about its presentation capabilities, otherwise returns an empty optional.
 	static std::experimental::optional<SurfaceSupportDetails> find_device_surface_support(VkPhysicalDevice, VkSurfaceKHR);
-
-	/// Given an instance and surface, selects the best (fastest, most capable, etc.) graphics device
-	/// which supports rendering onto that particular surface and constructs the object.
-
 
 	/// Given a physical device and a list of queue family indices in that device, instantiates
 	/// a logical device with a queue per each of the families. The device has to support the

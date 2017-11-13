@@ -1,5 +1,7 @@
 #include "graphics_device.h"
 
+#include <cstring>
+
 #include "../../error/error.h"
 #include "../../log/log.h"
 
@@ -138,10 +140,7 @@ VlkGraphicsDevice::VlkGraphicsDevice(VkPhysicalDevice dev, std::vector<uint32_t>
 	// TODO request features
 	create_dev.pEnabledFeatures = &features;
 
-	VkResult res = vkCreateDevice(this->phys_device, &create_dev, nullptr, &this->device);
-	if (res != VK_SUCCESS) {
-		throw Error(MSG(err) << "Failed to initialize logical Vulkan device.");
-	}
+	VK_CALL_CHECKED(vkCreateDevice, this->phys_device, &create_dev, nullptr, &this->device);
 
 	// Obtain handles for the created queues
 	this->queues.resize(q_fams.size());

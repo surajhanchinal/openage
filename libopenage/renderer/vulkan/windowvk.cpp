@@ -7,8 +7,8 @@
 #include "../../error/error.h"
 #include "../../log/log.h"
 #include "graphics_device.h"
-
 #include "util.h"
+
 
 
 namespace openage {
@@ -112,12 +112,12 @@ VlkWindow::VlkWindow(const char* title)
 	}
 
 	// Setup application description.
-	VkApplicationInfo app_info {};
+	VkApplicationInfo app_info  = {};
 	app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 	app_info.pApplicationName = title;
-	app_info.apiVersion = VK_MAKE_VERSION(1, 0, 3);
+	app_info.apiVersion = VK_MAKE_VERSION(1, 0, 57);
 
-	VkInstanceCreateInfo inst_info {};
+	VkInstanceCreateInfo inst_info = {};
 	inst_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	inst_info.pApplicationInfo = &app_info;
 	inst_info.enabledExtensionCount = extension_names.size();
@@ -127,26 +127,22 @@ VlkWindow::VlkWindow(const char* title)
 
 	// A Vulkan instance is a proxy for all usage of Vulkan from our application,
 	// kind of like a GL context. Initialize it.
-	VkResult res = vkCreateInstance(&inst_info, nullptr, &this->instance);
-	if (res != VK_SUCCESS) {
-		throw Error(MSG(err) << "Failed to create Vulkan instance.");
-	}
+	VK_CALL_CHECKED(vkCreateInstance, &inst_info, nullptr, &this->instance);
+
+	this->loader.init(this->instance);
 
 #ifndef NDEBUG
-	VkDebugReportCallbackCreateInfoEXT cb_info {};
+	VkDebugReportCallbackCreateInfoEXT cb_info = {};
 	cb_info.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT;
 	cb_info.flags =
 	VK_DEBUG_REPORT_ERROR_BIT_EXT
 	| VK_DEBUG_REPORT_WARNING_BIT_EXT
 	| VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT
 	| VK_DEBUG_REPORT_INFORMATION_BIT_EXT
-  | VK_DEBUG_REPORT_DEBUG_BIT_EXT;
+	| VK_DEBUG_REPORT_DEBUG_BIT_EXT;
 	cb_info.pfnCallback = vlk_debug_cb;
 
-	res = vkCreateDebugReportCallbackEXT(this->instance, &cb_info, nullptr, &this->debug_callback);
-	if (res != VK_SUCCESS) {
-		throw Error(MSG(err) << "Failed to set debug callback.");
-	}
+	VK_CALL_CHECKED(this->loader.vkCreateDebugReportCallbackEXT, this->instance, &cb_info, nullptr, &this->debug_callback);
 #endif
 
 	// Surface is an object that we draw into, corresponding to the window area.
@@ -158,7 +154,7 @@ VlkWindow::VlkWindow(const char* title)
 
 VlkWindow::~VlkWindow() {
 #ifndef NDEBUG
-	vkDestroyDebugReportCallbackEXT(this->instance, this->debug_callback, nullptr);
+	this->loader.vkDestroyDebugReportCallbackEXT(this->instance, this->debug_callback, nullptr);
 #endif
 	vkDestroySurfaceKHR(this->instance, this->surface, nullptr);
 	vkDestroyInstance(this->instance, nullptr);
